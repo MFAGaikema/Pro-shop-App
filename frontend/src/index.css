@@ -25,3 +25,7 @@ main {
   background-color: transparent !important;
   padding: 10px 0 !important;
 }
+
+.removed {
+  display: none;
+}

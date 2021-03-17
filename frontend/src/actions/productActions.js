@@ -22,7 +22,6 @@ export const listProducts = () => async (dispatch) => {
 			payload: data,
 		})
 
-    dispatch({type: CLEAR_PRODUCT_DETAILS})
 	} catch (error) {
 		dispatch({
 			type: PRODUCT_LIST_FAIL,
@@ -49,4 +48,8 @@ export const listProductDetails = (id) => async (dispatch) => {
 			payload: error.response && error.response.data.message ? error.response.data.message : error.message,
 		})
 	}
+}
+
+export const clearProductDetails = () => (dispatch) => {
+	dispatch({type: CLEAR_PRODUCT_DETAILS})
 }

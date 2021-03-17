@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import { useDispatch, useSelector } from 'react-redux'
-import { listProductDetails } from '../actions/productActions'
+import { listProductDetails, clearProductDetails } from '../actions/productActions'
 
 import { Row, Col, Image, ListGroup, Card, Button, Form } from 'react-bootstrap'
 import Rating from '../components/Rating'
@@ -32,9 +32,13 @@ const Productscreen = ({ match, history }) => {
 		
 	}
 
+	const clickHandler = () => {
+		dispatch(clearProductDetails())
+	}
+
 	return (
 		<>
-			<Link to='/' className='btn btn-light my-3'>
+			<Link to='/' onClick={clickHandler} className='btn btn-light my-3'>
 				GO BACK
 			</Link>
 			{loading ? (
