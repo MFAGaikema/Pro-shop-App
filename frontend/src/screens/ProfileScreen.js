@@ -24,12 +24,11 @@ const ProfileScreen = ({ location, history }) => {
 		if ((user === undefined || user === null)) {
 			history.push('/')
 		} else {
-      console.log(userDetails)
       if(!userDetails.name) {
         dispatch(getUserDetails('profile'))
       } else {
-        setName(userDetails.name)
-        setEmail(userDetails.email)
+        setName(user.name)
+        setEmail(user.email)
       }
     }
 	}, [user, history, userDetails, dispatch])
@@ -51,7 +50,7 @@ const ProfileScreen = ({ location, history }) => {
 	return (
     <Row>
       <Col md={3}>
-      <h3>User Profile</h3>
+      <h4>User Profile</h4>
       {success && <Message variant='success'>Profile successfully updated!</Message>}
       {error && <Message variant='danger'>{error}</Message>}
 			{message && <Message variant='danger'>{message}</Message>}

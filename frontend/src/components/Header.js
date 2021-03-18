@@ -1,17 +1,31 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import { Navbar, Nav, NavDropdown,	 Container } from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap'
 
 import {useDispatch, useSelector} from 'react-redux'
-import {logout} from '../actions/userActions'
+import {logout, resetUserProfile} from '../actions/userActions'
 
 const Header = () => {
 	const dispatch = useDispatch()
 
 	const {user} = useSelector(state => state.userLogin)
+	const userName = useSelector(state => state.userUpdateProfile)
+
+	const [name, setName] = useState('')
+
+	useEffect(() => {
+		if(userName.user) {
+			setName(userName.user.name)
+		} else {
+			if(user !== null) {
+				setName(user.name)
+			}
+		}	
+	}, [userName, user])
 
 	const logoutHandler = () => {
 		dispatch(logout())
+		dispatch(resetUserProfile())
 	}
 
 	return (
@@ -31,7 +45,7 @@ const Header = () => {
 								</Nav.Link>
 							</LinkContainer>
 							{!(user === undefined || user === null) ? 
-								<NavDropdown title={user.name} id='username'>
+								<NavDropdown title={name} id='username'>
 									<LinkContainer to='/profile'>
 										<NavDropdown.Item>Profile</NavDropdown.Item>
 									</LinkContainer>

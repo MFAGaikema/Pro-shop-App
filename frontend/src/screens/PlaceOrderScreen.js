@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { Button, Row, Col, ListGroup, Image, Card } from 'react-bootstrap'
@@ -7,11 +7,13 @@ import Message from '../components/Message'
 import CheckoutSteps from '../components/CheckoutSteps'
 
 import { saveShippingAddress, savePaymentMethod } from '../actions/cartActions'
+import {createOrder} from '../actions/orderActions'
 
-const PlaceOrderScreen = () => {
+const PlaceOrderScreen = ({history}) => {
 	const dispatch = useDispatch()
 
 	const {
+		shippingAddress,
 		shippingAddress: { address, city, postalCode, country },
 		paymentMethod,
 		cartItems,
@@ -21,10 +23,25 @@ const PlaceOrderScreen = () => {
     totalPrice = +itemsPrice + +shippingPrice + +taxPrice
 	} = useSelector((state) => state.cart)
 
-  
+	const {order, success, error} = useSelector(state => state.orderCreate)
+
+	useEffect(() => {
+		if(success) {
+			history.push(`/orders/${order._id}`)
+		}
+		// eslint-disable-next-line
+	}, [success, history])
 
   const placeOrderHandler = () => {
-    console.log('order')
+    dispatch(createOrder({
+			orderItems: cartItems,
+			shippingAddress,
+			paymentMethod,
+			itemsPrice,
+			shippingPrice,
+			taxPrice,
+			totalPrice
+		}))
   }
 
 	return (
@@ -103,6 +120,9 @@ const PlaceOrderScreen = () => {
               <Col className='text-right'>${totalPrice}</Col>
             </Row>
           </ListGroup.Item>
+					<ListGroup.Item>
+						{error && <Message variant='danger'>{error}</Message>}
+					</ListGroup.Item>
           <ListGroup.Item>
             <Button type='button' className='btn-block' disabled={cartItems === 0} onClick={placeOrderHandler}>Place Order</Button>
         </ListGroup.Item>
