@@ -29,3 +29,18 @@ main {
 .removed {
   display: none;
 }
+
+.payed, .not-payed, .delivered, .not-delivered {
+  padding: 5px 10px;
+  text-align: center;
+}
+
+.payed, .delivered {
+  background-color: aquamarine;
+  color: black;
+}
+
+.not-payed, .not-delivered {
+  background-color: rgb(240, 74, 74);
+  color: white;
+}

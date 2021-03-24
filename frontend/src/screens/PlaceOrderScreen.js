@@ -6,7 +6,6 @@ import { Link } from 'react-router-dom'
 import Message from '../components/Message'
 import CheckoutSteps from '../components/CheckoutSteps'
 
-import { saveShippingAddress, savePaymentMethod } from '../actions/cartActions'
 import {createOrder} from '../actions/orderActions'
 
 const PlaceOrderScreen = ({history}) => {

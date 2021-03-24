@@ -37,4 +37,78 @@ const addOrderItems = asyncHandler(async (req, res) => {
   }
 })
 
-export {addOrderItems}
+// @desc get order by ID
+// @route GET /api/orders/:id
+// @access Private
+const getOrderById = asyncHandler(async (req, res) => {
+	const order = await Order.findById(req.params.id).populate('user', 'name email')
+
+	if(order) {
+		res.json(order)
+	} else {
+		res.status(404)
+		throw new Error('order not found')
+	}
+}) 
+
+// @desc Update order to paid
+// @route PUT /api/orders/:id/pay
+// @access Private
+const updateOrderToPaid = asyncHandler(async (req, res) => {
+	const order = await Order.findById(req.params.id)
+
+	if(order) {
+		order.isPayed = true
+    order.payedAt = Date.now()
+
+    const {id, status, update_time} = req.body
+
+    order.paymentResult = {
+      id, status, update_time, email_address: req.body.payer.email_address
+    }
+
+    const updatedOrder = await order.save()
+
+    res.json(updatedOrder)
+	} else {
+		res.status(404)
+		throw new Error('order not found')
+	}
+}) 
+
+// @desc get logged in user orders
+// @route GET /api/orders/myorders
+// @access Private
+const getMyOrders = asyncHandler(async (req, res) => {
+  const orders = await Order.find({ user: req.user._id })
+  res.json(orders)
+})
+
+// @desc get all orders
+// @route GET /api/orders
+// @access Private/Admin
+const getOrders = asyncHandler(async (req, res) => {
+  const orders = await Order.find({}).populate('user', 'id name')
+  res.json(orders)
+})
+
+// @desc Update order to delivered
+// @route PUT /api/orders/:id/deliver
+// @access Private/Admin
+const updateOrderToDelivered = asyncHandler(async (req, res) => {
+	const order = await Order.findById(req.params.id)
+
+	if(order) {
+		order.isDelivered = true
+    order.deliveredAt = Date.now()
+
+    const updatedOrder = await order.save()
+
+    res.json(updatedOrder)
+	} else {
+		res.status(404)
+		throw new Error('order not found')
+	}
+})
+
+export {addOrderItems, getOrderById, updateOrderToPaid, getMyOrders, getOrders, updateOrderToDelivered}

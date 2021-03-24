@@ -44,7 +44,22 @@ const Header = () => {
 									<i className='fas fa-shopping-cart'></i> Cart
 								</Nav.Link>
 							</LinkContainer>
-							{!(user === undefined || user === null) ? 
+							{!(user === undefined || user === null) ? !(user ===  undefined || user === null) && user.isAdmin ? 							
+								<NavDropdown title='Admin' id='adminmenu'>
+								<LinkContainer to='/profile'>
+								<NavDropdown.Item>Profile</NavDropdown.Item>
+							</LinkContainer>
+							<LinkContainer to='/admin/userlist'>
+								<NavDropdown.Item>Users</NavDropdown.Item>
+							</LinkContainer>
+							<LinkContainer to='/admin/product'>
+							<NavDropdown.Item>Products</NavDropdown.Item>
+						</LinkContainer>
+						<LinkContainer to='/admin/orders'>
+						<NavDropdown.Item>Orders</NavDropdown.Item>
+					</LinkContainer>
+							<NavDropdown.Item onClick={logoutHandler}>Logout</NavDropdown.Item>
+						</NavDropdown> :
 								<NavDropdown title={name} id='username'>
 									<LinkContainer to='/profile'>
 										<NavDropdown.Item>Profile</NavDropdown.Item>
@@ -58,7 +73,6 @@ const Header = () => {
 									</Nav.Link>
 								</LinkContainer>)
 							}
-
 						</Nav>
 					</Navbar.Collapse>
 				</Container>
