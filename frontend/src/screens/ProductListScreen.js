@@ -8,11 +8,14 @@ import { LinkContainer } from 'react-router-bootstrap'
 import { Table, Button, Row, Col } from 'react-bootstrap'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
+import Paginate from '../components/Paginate'
 
-const ProductListScreen = ({ history, match }) => {
+const ProductListScreen = ({ history, match}) => {
+	const pageNumber = match.params.pageNumber || 1
+
 	const dispatch = useDispatch()
 
-	const { products, loading, error } = useSelector((state) => state.productList)
+	const { products, loading, error, pages, page } = useSelector((state) => state.productList)
 	const { success: successDelete, loading: loadingDelete, error: errorDelete } = useSelector((state) => state.productDelete)
 	const { success: successCreate, loading: loadingCreate, error: errorCreate, product: createdProduct } = useSelector((state) => state.productCreate)
 
@@ -30,10 +33,10 @@ const ProductListScreen = ({ history, match }) => {
     if (successCreate) {
       history.push(`/admin/product/${createdProduct._id}/edit`)
     } else {
-      dispatch(listProducts())
+      dispatch(listProducts('', pageNumber))
     }
 
-	}, [dispatch, history, user, successDelete, successCreate, createdProduct])
+	}, [dispatch, history, user, successDelete, successCreate, createdProduct, pageNumber])
 
 	const deleteHandler = (id, name) => {
 		if (window.confirm(`Are you sure you want to delete ${name}?`)) {
@@ -64,6 +67,7 @@ const ProductListScreen = ({ history, match }) => {
 			) : error ? (
 				<Message variant='danger'>{error}</Message>
 			) : (
+				<>
 				<Table striped bordered hover responsive className='table-sm'>
 					<thead>
 						<tr>
@@ -108,6 +112,8 @@ const ProductListScreen = ({ history, match }) => {
 						))}
 					</tbody>
 				</Table>
+				<Paginate pages={pages} page={page} isAdmin='true'/>
+				</>
 			)}
 		</>
 	)

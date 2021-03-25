@@ -9,6 +9,7 @@ import { Row, Col, Image, ListGroup, Card, Button, Form } from 'react-bootstrap'
 import Rating from '../components/Rating'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
+import Meta from '../components/Meta'
 
 const Productscreen = ({ match, history }) => {
 	const [qty, setQty] = useState(1)
@@ -22,8 +23,6 @@ const Productscreen = ({ match, history }) => {
 	const { success: successReview, error: errorReview } = useSelector((state) => state.productReview)
 
 	const { product, loading, error } = useSelector((state) => state.productDetails)
-
-	const { image, name, rating, numReviews, description, countInStock, price, reviews } = product
 
 	useEffect(() => {
 		if (successReview) {
@@ -62,6 +61,7 @@ const Productscreen = ({ match, history }) => {
 
 	return (
 		<>
+		
 			<Link to='/' onClick={clickHandler} className='btn btn-light my-3'>
 				GO BACK
 			</Link>
@@ -71,19 +71,19 @@ const Productscreen = ({ match, history }) => {
 				<Message variant='danger'>{error}</Message>
 			) : (
 				<>
-					<Row>
-						<Col md={6}>
-							<Image src={image} alt={name} fluid />
+				<Row>
+				<Col md={6}>
+							<Image src={product.image} alt={product.name} fluid />
 						</Col>
 						<Col md={3}>
 							<ListGroup variant='flush'>
 								<ListGroup.Item>
-									<h5>{name}</h5>
+									<h5>{product.name}</h5>
 								</ListGroup.Item>
 								<ListGroup.Item>
-									<Rating value={rating} text={`${numReviews} reviews`} />
+									<Rating value={product.rating} text={`${product.numReviews} reviews`} />
 								</ListGroup.Item>
-								<ListGroup.Item>Description: {description}</ListGroup.Item>
+								<ListGroup.Item>Description: {product.description}</ListGroup.Item>
 							</ListGroup>
 						</Col>
 						<Col md={3}>
@@ -93,23 +93,23 @@ const Productscreen = ({ match, history }) => {
 										<Row>
 											<Col>Price:</Col>
 											<Col className='text-right'>
-												<strong className='h5'>${price}</strong>
+												<strong className='h5'>${product.price}</strong>
 											</Col>
 										</Row>
 									</ListGroup.Item>
 									<ListGroup.Item>
 										<Row>
 											<Col>Status:</Col>
-											<Col className='h6 text-right'>{countInStock ? 'In Stock' : 'Out Of Stock'}</Col>
+											<Col className='h6 text-right'>{product.countInStock ? 'In Stock' : 'Out Of Stock'}</Col>
 										</Row>
 									</ListGroup.Item>
-									{countInStock > 0 && (
+									{product.countInStock > 0 && (
 										<ListGroup.Item>
 											<Row>
 												<Col>QTY</Col>
 												<Col>
 													<Form.Control as='select' value={qty} onChange={(e) => setQty(e.target.value)}>
-														{[...Array(countInStock).keys()].map((num) => (
+														{[...Array(product.countInStock).keys()].map((num) => (
 															<option key={num} value={num + 1}>
 																{num + 1}
 															</option>
@@ -124,7 +124,7 @@ const Productscreen = ({ match, history }) => {
 											onClick={addToCartHandler}
 											className='btn-block btn-light'
 											type='button'
-											disabled={!countInStock}
+											disabled={!product.countInStock}
 										>
 											Add To Cart
 										</Button>
@@ -136,9 +136,9 @@ const Productscreen = ({ match, history }) => {
 					<Row>
 						<Col md={6}>
 							<h4>Reviews</h4>
-							{numReviews === 0 && <h6 className='text-center px-4 py-2 btn-light'>No Reviews</h6>}
+							{product.numReviews === 0 && <h6 className='text-center px-4 py-2 btn-light'>No Reviews</h6>}
 							<ListGroup variant='flush'>
-								{reviews.map((review) => (
+								{product.reviews.map((review) => (
 									<ListGroup.Item key={review._id}>
 										<strong>{review.name}</strong>
 										<Rating value={review.rating} />
@@ -180,7 +180,7 @@ const Productscreen = ({ match, history }) => {
 											</Button>
 										</Form>
 									) : (
-										<h6 className='text-center px-4 py-2 btn-light' sage>
+										<h6 className='text-center px-4 py-2 btn-light'>
 											Please <Link to='/login'>login</Link> to leave a review
 										</h6>
 									)}
@@ -188,6 +188,7 @@ const Productscreen = ({ match, history }) => {
 							</ListGroup>
 						</Col>
 					</Row>
+					<Meta title={product.name ? product.name : 'product'}/>
 				</>
 			)}
 		</>
